@@ -39,9 +39,8 @@ public class UserCreateTest {
     @Description("Проверяется, что невозможно создать пользователя, который уже зарегистрирован")
     public void createDuplicateUserTest() {
         accessToken = userSteps.createUser(user).extract().path("accessToken");
-        ValidatableResponse createResponseFirst = userSteps.createUser(user);
-        ValidatableResponse createResponseSecond = userSteps.createUser(user);
-        createResponseSecond
+        ValidatableResponse createResponse = userSteps.createUser(user);
+        createResponse
                 .statusCode(403)
                 .assertThat()
                 .body("success", is(false));

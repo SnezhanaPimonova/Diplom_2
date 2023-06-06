@@ -6,15 +6,15 @@ import io.restassured.response.ValidatableResponse;
 
 import static io.restassured.RestAssured.given;
 
-public class OrdersSteps extends RestClient {
+public class OrderSteps extends RestClient {
     private static final String ORDER_PATH = "api/orders";
 
     @Step("Создание заказа")
-    public ValidatableResponse createOrder(String accessToken, Orders orders) {
+    public ValidatableResponse createOrder(String accessToken, Order order) {
         return given()
                 .spec(getBaseSpec())
                 .header("Authorization", accessToken)
-                .body(orders)
+                .body(order)
                 .when()
                 .post(ORDER_PATH)
                 .then();
@@ -41,10 +41,10 @@ public class OrdersSteps extends RestClient {
     }
 
     @Step("Создание заказа без авторизации")
-    public ValidatableResponse createOrderWithoutAuth(Orders orders) {
+    public ValidatableResponse createOrderWithoutAuth(Order order) {
         return given()
                 .spec(getBaseSpec())
-                .body(orders)
+                .body(order)
                 .when()
                 .post(ORDER_PATH)
                 .then();

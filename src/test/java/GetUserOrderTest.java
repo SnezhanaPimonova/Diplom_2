@@ -1,9 +1,9 @@
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import orders.Orders;
-import orders.OrdersGenerator;
-import orders.OrdersSteps;
+import orders.Order;
+import orders.OrderGenerator;
+import orders.OrderSteps;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +13,9 @@ import user.UserSteps;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class GetUserOrdersTest {
-    private Orders orders;
-    private OrdersSteps ordersSteps;
+public class GetUserOrderTest {
+    private Order order;
+    private OrderSteps orderSteps;
     private UserSteps userSteps;
     private User user;
     private String accessToken;
@@ -26,16 +26,16 @@ public class GetUserOrdersTest {
         user = UserGenerator.getRandomUser();
         ValidatableResponse registerResponse = userSteps.createUser(user);
         accessToken = registerResponse.extract().path("accessToken");
-        ordersSteps = new OrdersSteps();
-        orders = OrdersGenerator.getRandomOrder();
-        ordersSteps.createOrder(accessToken, orders);
+        orderSteps = new OrderSteps();
+        order = OrderGenerator.getOrderData();
+        orderSteps.createOrder(accessToken, order);
     }
 
     @Test
     @DisplayName("Получение заказов конкретного пользователя c авторизацией")
     @Description("Проверяется, что можно получить заказы пользователя с авторизацией")
     public void getOrdersUserWithAuthTest() {
-        ValidatableResponse ordersClientResponse = ordersSteps.getOrders(accessToken);
+        ValidatableResponse ordersClientResponse = orderSteps.getOrders(accessToken);
         ordersClientResponse
                 .statusCode(200)
                 .body("success", equalTo(true));
@@ -46,7 +46,7 @@ public class GetUserOrdersTest {
     @DisplayName("Получение заказов конкретного пользователя без авторизации")
     @Description("Проверяется, что невозможно получить заказы пользователя без авторизации")
     public void getOrdersUserWithoutAuthTest() {
-        ValidatableResponse ordersClientResponse = ordersSteps.getOrders("");
+        ValidatableResponse ordersClientResponse = orderSteps.getOrders("");
         ordersClientResponse
                 .statusCode(401)
                 .body("success", equalTo(false))
